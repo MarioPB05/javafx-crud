@@ -9,7 +9,11 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
 import model.Person;
+
+import java.util.Objects;
 
 public class PeopleController {
 
@@ -52,6 +56,13 @@ public class PeopleController {
         alert.setHeaderText(null);
         alert.setTitle("Error");
         alert.setContentText(message);
+
+        // Obtener la ventana del Alert
+        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+
+        // Agregar un icono al Alert
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/icons/people.png"))));
+
         alert.showAndWait();
     }
 
@@ -61,6 +72,11 @@ public class PeopleController {
             String name = inputName.getText();
             String lastName = inputLastName.getText();
             Integer age = Integer.parseInt(inputAge.getText());
+
+            if (name.isEmpty() || lastName.isEmpty() || age == null) {
+                showErrorMessage("Todos los campos son obligatorios");
+                return;
+            }
 
             Person person = new Person(name, lastName, age);
 
