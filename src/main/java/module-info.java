@@ -4,5 +4,6 @@ module mpb.control_de_personas {
 
 
     opens controller to javafx.fxml;
+    opens model to javafx.base;
     exports controller;
 }
