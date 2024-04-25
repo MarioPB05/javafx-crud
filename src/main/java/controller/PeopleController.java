@@ -2,7 +2,6 @@ package controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
@@ -10,7 +9,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import model.Person;
 
@@ -96,7 +94,7 @@ public class PeopleController {
     }
 
     @FXML
-    void addPerson(ActionEvent event) {
+    void addPerson() {
         try {
             Person person = getInputPerson();
 
@@ -119,7 +117,7 @@ public class PeopleController {
 
 
     @FXML
-    void modify(ActionEvent event) {
+    void modify() {
         Person person = getSelectedPerson();
 
         if (person == null) {
@@ -145,7 +143,7 @@ public class PeopleController {
     }
 
     @FXML
-    void selectedRow(MouseEvent event) {
+    void selectedRow() {
         Person person = getSelectedPerson();
 
         if (person != null) {
