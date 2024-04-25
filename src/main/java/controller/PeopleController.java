@@ -50,10 +50,10 @@ public class PeopleController {
         colAge.setCellValueFactory(new PropertyValueFactory<>("age"));
     }
 
-    private void showErrorMessage(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+    private void showAlert(String title, String message, Alert.AlertType type) {
+        Alert alert = new Alert(type);
         alert.setHeaderText(null);
-        alert.setTitle("Error");
+        alert.setTitle(title);
         alert.setContentText(message);
 
         // Obtener la ventana del Alert
@@ -71,7 +71,7 @@ public class PeopleController {
         Integer age = Integer.parseInt(inputAge.getText());
 
         if (name.isEmpty() || lastName.isEmpty()) {
-            showErrorMessage("Todos los campos son obligatorios");
+            showAlert("Error", "Todos los campos son obligatorios", Alert.AlertType.ERROR);
             return null;
         }
 
@@ -108,10 +108,10 @@ public class PeopleController {
                 // Limpiar los campos de texto.
                 clearInputs();
             }else {
-                showErrorMessage("La persona ya existe");
+                showAlert("Error", "La persona ya existe", Alert.AlertType.ERROR);
             }
         } catch (NumberFormatException e) {
-            showErrorMessage("La edad debe ser un número entero");
+            showAlert("Error", "La edad debe ser un número entero", Alert.AlertType.ERROR);
         }
     }
 
@@ -120,7 +120,7 @@ public class PeopleController {
         Person person = getSelectedPerson();
 
         if (person == null) {
-            showErrorMessage("Debes seleccionar una persona");
+            showAlert("Información", "Debes seleccionar una persona", Alert.AlertType.INFORMATION);
         }else {
             people.remove(person);
 
@@ -137,7 +137,7 @@ public class PeopleController {
         Person person = getSelectedPerson();
 
         if (person == null) {
-            showErrorMessage("Debes seleccionar una persona");
+            showAlert("Información", "Debes seleccionar una persona", Alert.AlertType.INFORMATION);
         }else {
             try {
                 Person aux = getInputPerson();
@@ -150,10 +150,10 @@ public class PeopleController {
                     // Actualizar la tabla de personas.
                     refreshTable();
                 }else {
-                    showErrorMessage("La persona ya existe");
+                    showAlert("Error", "La persona ya existe", Alert.AlertType.ERROR);
                 }
             } catch (NumberFormatException e) {
-                showErrorMessage("La edad debe ser un número entero");
+                showAlert("Error", "La edad debe ser un número entero", Alert.AlertType.ERROR);
             }
         }
     }
