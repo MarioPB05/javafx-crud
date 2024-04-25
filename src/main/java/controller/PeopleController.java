@@ -47,15 +47,27 @@ public class PeopleController {
         colAge.setCellValueFactory(new PropertyValueFactory<>("age"));
     }
 
+    /**
+     * Obtiene la persona seleccionada en la tabla.
+     * @return La persona seleccionada.
+     */
     private Person getSelectedPerson() {
         return tablePeople.getSelectionModel().getSelectedItem();
     }
 
+    /**
+     * Refresca la tabla de personas.
+     */
     private void refreshTable() {
         tablePeople.setItems(people);
         tablePeople.refresh();
     }
 
+    /**
+     * Muestra la ventana modal para agregar o modificar una persona.
+     * @param person La persona a modificar, si es null se agregará una nueva persona.
+     * @return La persona modificada o agregada.
+     */
     private Person setModalScene(Person person) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/modal-view.fxml"));
@@ -85,6 +97,9 @@ public class PeopleController {
         }
     }
 
+    /**
+     * Agrega una persona a la lista de personas.
+     */
     @FXML
     void addPerson() {
         Person person = setModalScene(null);
@@ -95,6 +110,9 @@ public class PeopleController {
         refreshTable();
     }
 
+    /**
+     * Elimina una persona de la lista de personas.
+     */
     @FXML
     void delete() {
         Person person = getSelectedPerson();
@@ -111,6 +129,9 @@ public class PeopleController {
         }
     }
 
+    /**
+     * Modifica una persona de la lista de personas.
+     */
     @FXML
     void modify() {
         Person person = getSelectedPerson();
