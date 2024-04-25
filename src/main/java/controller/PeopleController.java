@@ -9,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
@@ -57,15 +56,19 @@ public class PeopleController {
         tablePeople.refresh();
     }
 
-    @FXML
-    void addPerson() {
+    private Person setModalScene(Person person) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/modal-view.fxml"));
 
             Parent root = loader.load();
 
             ModalController controller = loader.getController();
-            controller.initAttributes(people);
+
+            if (person != null) {
+                controller.initAttributes(people, person);
+            }else {
+                controller.initAttributes(people);
+            }
 
             Scene scene = new Scene(root, 200, 400);
             Stage stage = new Stage();
@@ -76,15 +79,20 @@ public class PeopleController {
             stage.setScene(scene);
             stage.showAndWait();
 
-            Person person = controller.getPerson();
-
-            if (person != null) {
-                people.add(person);
-                refreshTable();
-            }
+            return controller.getPerson();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @FXML
+    void addPerson() {
+        Person person = setModalScene(null);
+
+        if (person == null) return;
+
+        people.add(person);
+        refreshTable();
     }
 
     @FXML
@@ -110,33 +118,9 @@ public class PeopleController {
         if (person == null) {
             showAlert("Información", "Debes seleccionar una persona", Alert.AlertType.INFORMATION);
         }else {
-            try {
-                Person aux = getInputPerson();
+            Person aux = setModalScene(person);
 
-                if (aux != null && !people.contains(aux)) {
-                    person.setName(aux.getName());
-                    person.setLastName(aux.getLastName());
-                    person.setAge(aux.getAge());
-
-                    // Actualizar la tabla de personas.
-                    refreshTable();
-                }else {
-                    showAlert("Error", "La persona ya existe", Alert.AlertType.ERROR);
-                }
-            } catch (NumberFormatException e) {
-                showAlert("Error", "La edad debe ser un número entero", Alert.AlertType.ERROR);
-            }
-        }
-    }
-
-    @FXML
-    void selectedRow() {
-        Person person = getSelectedPerson();
-
-        if (person != null) {
-            inputName.setText(person.getName());
-            inputLastName.setText(person.getLastName());
-            inputAge.setText(person.getAge().toString());
+            if (aux != null) refreshTable();
         }
     }
 
