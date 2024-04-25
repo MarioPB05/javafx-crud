@@ -23,14 +23,20 @@
       <Pane prefHeight="15.0" prefWidth="177.0" />
       <Button mnemonicParsing="false" onAction="#addPerson" prefHeight="25.0" prefWidth="203.0" text="Agregar Persona" />
     </VBox>
-    <TableView fx:id="tablePeople" minWidth="450.0" prefHeight="360.0">
-        <columns>
-            <TableColumn fx:id="colName" prefWidth="150.0" text="Nombre" />
-            <TableColumn fx:id="colLastName" prefWidth="200.0" text="Apellidos" />
-            <TableColumn fx:id="colAge" prefWidth="100.0" text="Edad" />
-        </columns>
-        <HBox.margin>
-            <Insets bottom="20.0" top="20.0" />
-        </HBox.margin>
-    </TableView>
+   <VBox>
+      <HBox.margin>
+         <Insets bottom="20.0" top="20.0" />
+      </HBox.margin>
+      <TableView fx:id="tablePeople" minWidth="450.0" onMouseClicked="#selectedRow" prefHeight="360.0">
+          <columns>
+              <TableColumn fx:id="colName" prefWidth="150.0" text="Nombre" />
+              <TableColumn fx:id="colLastName" prefWidth="200.0" text="Apellidos" />
+              <TableColumn fx:id="colAge" prefWidth="100.0" text="Edad" />
+          </columns>
+      </TableView>
+     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+       <Button mnemonicParsing="false" onAction="#modify" prefWidth="100.0" text="Modificar" />
+       <Button mnemonicParsing="false" onAction="#delete" prefWidth="100.0" text="Eliminar" />
+     </HBox>
+   </VBox>
 </HBox>
