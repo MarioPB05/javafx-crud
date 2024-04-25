@@ -19,6 +19,8 @@ import model.Person;
 import java.io.IOException;
 import java.util.Objects;
 
+import static utils.Utils.showAlert;
+
 public class PeopleController {
 
     @FXML
@@ -97,8 +99,7 @@ public class PeopleController {
             // Actualizar la tabla de personas.
             refreshTable();
 
-            // Limpiar los campos de texto.
-            clearInputs();
+            showAlert("Información", "Persona eliminada correctamente", Alert.AlertType.INFORMATION);
         }
     }
 
