@@ -115,6 +115,22 @@ public class PeopleController {
         }
     }
 
+    @FXML
+    void delete() {
+        Person person = getSelectedPerson();
+
+        if (person == null) {
+            showErrorMessage("Debes seleccionar una persona");
+        }else {
+            people.remove(person);
+
+            // Actualizar la tabla de personas.
+            refreshTable();
+
+            // Limpiar los campos de texto.
+            clearInputs();
+        }
+    }
 
     @FXML
     void modify() {
