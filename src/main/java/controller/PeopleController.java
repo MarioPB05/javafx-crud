@@ -3,15 +3,20 @@ package controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Person;
 
+import java.io.IOException;
 import java.util.Objects;
 
 public class PeopleController {
@@ -24,15 +29,6 @@ public class PeopleController {
 
     @FXML
     private TableColumn<Person, String> colName;
-
-    @FXML
-    private TextField inputAge;
-
-    @FXML
-    private TextField inputLastName;
-
-    @FXML
-    private TextField inputName;
 
     @FXML
     private TableView<Person> tablePeople;
@@ -50,34 +46,6 @@ public class PeopleController {
         colAge.setCellValueFactory(new PropertyValueFactory<>("age"));
     }
 
-    private void showAlert(String title, String message, Alert.AlertType type) {
-        Alert alert = new Alert(type);
-        alert.setHeaderText(null);
-        alert.setTitle(title);
-        alert.setContentText(message);
-
-        // Obtener la ventana del Alert
-        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-
-        // Agregar un icono al Alert
-        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/icons/people.png"))));
-
-        alert.showAndWait();
-    }
-
-    private Person getInputPerson() {
-        String name = inputName.getText();
-        String lastName = inputLastName.getText();
-        Integer age = Integer.parseInt(inputAge.getText());
-
-        if (name.isEmpty() || lastName.isEmpty()) {
-            showAlert("Error", "Todos los campos son obligatorios", Alert.AlertType.ERROR);
-            return null;
-        }
-
-        return new Person(name, lastName, age);
-    }
-
     private Person getSelectedPerson() {
         return tablePeople.getSelectionModel().getSelectedItem();
     }
@@ -87,31 +55,33 @@ public class PeopleController {
         tablePeople.refresh();
     }
 
-    private void clearInputs() {
-        inputName.clear();
-        inputLastName.clear();
-        inputAge.clear();
-    }
-
     @FXML
     void addPerson() {
         try {
-            Person person = getInputPerson();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/modal-view.fxml"));
 
-            if (person != null && !people.contains(person)) {
-                // Agregar la persona a la lista de personas.
+            Parent root = loader.load();
+
+            ModalController controller = loader.getController();
+            controller.initAttributes(people);
+
+            Scene scene = new Scene(root, 200, 400);
+            Stage stage = new Stage();
+
+            stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/icons/people.png"))));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+            stage.setScene(scene);
+            stage.showAndWait();
+
+            Person person = controller.getPerson();
+
+            if (person != null) {
                 people.add(person);
-
-                // Actualizar la tabla de personas.
                 refreshTable();
-
-                // Limpiar los campos de texto.
-                clearInputs();
-            }else {
-                showAlert("Error", "La persona ya existe", Alert.AlertType.ERROR);
             }
-        } catch (NumberFormatException e) {
-            showAlert("Error", "La edad debe ser un número entero", Alert.AlertType.ERROR);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
