@@ -77,20 +77,35 @@ public class PeopleController {
                 showErrorMessage("Todos los campos son obligatorios");
                 return;
             }
+    private Person getSelectedPerson() {
+        return tablePeople.getSelectionModel().getSelectedItem();
+    }
 
-            Person person = new Person(name, lastName, age);
+    private void refreshTable() {
+        tablePeople.setItems(people);
+        tablePeople.refresh();
+    }
 
-            if (!people.contains(person)) {
+    private void clearInputs() {
+        inputName.clear();
+        inputLastName.clear();
+        inputAge.clear();
+    }
+
+    @FXML
+    void addPerson(ActionEvent event) {
+        try {
+            Person person = getInputPerson();
+
+            if (person != null && !people.contains(person)) {
                 // Agregar la persona a la lista de personas.
                 people.add(person);
 
                 // Actualizar la tabla de personas.
-                tablePeople.setItems(people);
+                refreshTable();
 
                 // Limpiar los campos de texto.
-                inputName.clear();
-                inputLastName.clear();
-                inputAge.clear();
+                clearInputs();
             }else {
                 showErrorMessage("La persona ya existe");
             }
