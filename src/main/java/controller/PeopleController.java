@@ -10,6 +10,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import model.Person;
 
@@ -66,17 +67,19 @@ public class PeopleController {
         alert.showAndWait();
     }
 
-    @FXML
-    void addPerson(ActionEvent event) {
-        try {
-            String name = inputName.getText();
-            String lastName = inputLastName.getText();
-            Integer age = Integer.parseInt(inputAge.getText());
+    private Person getInputPerson() {
+        String name = inputName.getText();
+        String lastName = inputLastName.getText();
+        Integer age = Integer.parseInt(inputAge.getText());
 
-            if (name.isEmpty() || lastName.isEmpty() || age == null) {
-                showErrorMessage("Todos los campos son obligatorios");
-                return;
-            }
+        if (name.isEmpty() || lastName.isEmpty()) {
+            showErrorMessage("Todos los campos son obligatorios");
+            return null;
+        }
+
+        return new Person(name, lastName, age);
+    }
+
     private Person getSelectedPerson() {
         return tablePeople.getSelectionModel().getSelectedItem();
     }
@@ -111,6 +114,44 @@ public class PeopleController {
             }
         } catch (NumberFormatException e) {
             showErrorMessage("La edad debe ser un número entero");
+        }
+    }
+
+
+    @FXML
+    void modify(ActionEvent event) {
+        Person person = getSelectedPerson();
+
+        if (person == null) {
+            showErrorMessage("Debes seleccionar una persona");
+        }else {
+            try {
+                Person aux = getInputPerson();
+
+                if (aux != null && !people.contains(aux)) {
+                    person.setName(aux.getName());
+                    person.setLastName(aux.getLastName());
+                    person.setAge(aux.getAge());
+
+                    // Actualizar la tabla de personas.
+                    refreshTable();
+                }else {
+                    showErrorMessage("La persona ya existe");
+                }
+            } catch (NumberFormatException e) {
+                showErrorMessage("La edad debe ser un número entero");
+            }
+        }
+    }
+
+    @FXML
+    void selectedRow(MouseEvent event) {
+        Person person = getSelectedPerson();
+
+        if (person != null) {
+            inputName.setText(person.getName());
+            inputLastName.setText(person.getLastName());
+            inputAge.setText(person.getAge().toString());
         }
     }
 
