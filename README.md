@@ -17,7 +17,7 @@ Obtiene la persona seleccionada en la tabla de personas.
 
 #### `private void refreshTable()`
 
-Actualiza la tabla de personas con la lista actualizada de personas.
+Actualiza la tabla de personas con la lista actualizada de personas. Se ha añadido un parámetro opcional para poder pasarle la lista de personas que se quiera mostrar en la tabla.
 
 #### `private Person setModalScene(Person person)`
 
@@ -34,6 +34,12 @@ Maneja el evento de eliminar una persona seleccionada. Elimina la persona selecc
 #### `void modify()`
 
 Maneja el evento de modificar una persona seleccionada. Abre el cuadro de diálogo modal para modificar los detalles de la persona seleccionada y actualiza la lista de personas si se guardan los cambios.
+
+#### `void filterTable()`
+Maneja el evento de escribir en el campo de búsqueda. Filtra la tabla de personas según el texto ingresado en el campo de búsqueda.
+
+#### `private Boolean checkFilter(Person person)`
+Comprueba si la persona cumple con el filtro de búsqueda. Devuelve true si la persona cumple con el filtro y false en caso contrario.
 
 
 
