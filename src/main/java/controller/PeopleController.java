@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
@@ -23,6 +24,9 @@ import static utils.Utils.showAlert;
 public class PeopleController {
 
     @FXML
+    public TextField filterInput;
+
+    @FXML
     private TableColumn<Person, Integer> colAge;
 
     @FXML
@@ -35,12 +39,14 @@ public class PeopleController {
     private TableView<Person> tablePeople;
 
     private ObservableList<Person> people;
+    private ObservableList<Person> filteredPeople;
 
     /**
      * Inicializa el controlador.
      */
     public void initialize() {
         people = FXCollections.observableArrayList();
+        filteredPeople = FXCollections.observableArrayList();
 
         colName.setCellValueFactory(new PropertyValueFactory<>("name"));
         colLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
@@ -59,6 +65,14 @@ public class PeopleController {
      * Refresca la tabla de personas.
      */
     private void refreshTable() {
+        tablePeople.setItems(people);
+        tablePeople.refresh();
+    }
+
+    /**
+     * Refresca la tabla de personas con una lista de personas.
+     */
+    private void refreshTable(ObservableList<Person> people) {
         tablePeople.setItems(people);
         tablePeople.refresh();
     }
@@ -107,7 +121,13 @@ public class PeopleController {
         if (person == null) return;
 
         people.add(person);
-        refreshTable();
+
+        if (checkFilter(person)) {
+            filteredPeople.add(person);
+            refreshTable(filteredPeople);
+        }else {
+            refreshTable();
+        }
     }
 
     /**
@@ -122,8 +142,12 @@ public class PeopleController {
         }else {
             people.remove(person);
 
-            // Actualizar la tabla de personas.
-            refreshTable();
+            if (checkFilter(person)) {
+                filteredPeople.remove(person);
+                refreshTable(filteredPeople);
+            }else {
+                refreshTable();
+            }
 
             showAlert("Información", "Persona eliminada correctamente", Alert.AlertType.INFORMATION);
         }
@@ -142,7 +166,38 @@ public class PeopleController {
             Person aux = setModalScene(person);
 
             if (aux != null) refreshTable();
+
+            if (!checkFilter(person)) {
+                filteredPeople.remove(person);
+                refreshTable(filteredPeople);
+            }
         }
+    }
+
+    public void filterTable() {
+        String filter = filterInput.getText().toLowerCase();
+
+        if(filter.isEmpty()) {
+            refreshTable(people);
+        }else {
+            filteredPeople.clear();
+
+            for (Person person : people) {
+                if(person.getName().toLowerCase().contains(filter) || person.getLastName().toLowerCase().contains(filter)) {
+                    filteredPeople.add(person);
+                }
+            }
+
+            refreshTable(filteredPeople);
+        }
+    }
+
+    private Boolean checkFilter(Person person) {
+        String filter = filterInput.getText().toLowerCase();
+
+        return !filter.isEmpty() && (
+                person.getName().toLowerCase().contains(filter) || person.getLastName().toLowerCase().contains(filter)
+        );
     }
 
 }
