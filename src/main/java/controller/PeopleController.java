@@ -174,6 +174,10 @@ public class PeopleController {
         }
     }
 
+    /**
+     * Filtra la tabla de personas.
+     * Si el filtro está vacío, se mostrarán todas las personas. Si no, se mostrarán las personas que contengan el filtro.
+     */
     public void filterTable() {
         String filter = filterInput.getText().toLowerCase();
 
@@ -192,6 +196,11 @@ public class PeopleController {
         }
     }
 
+    /**
+     * Verifica si una persona contiene el filtro.
+     * @param person La persona a verificar.
+     * @return True si la persona contiene el filtro, false en caso contrario.
+     */
     private Boolean checkFilter(Person person) {
         String filter = filterInput.getText().toLowerCase();
 
